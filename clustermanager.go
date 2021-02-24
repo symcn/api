@@ -100,6 +100,11 @@ type ResourceOperate interface {
 
 	// DeleteAllOf deletes all objects of the given type matching the given options with timeout.
 	DeleteAllOf(obj rtclient.Object, opts ...rtclient.DeleteAllOfOption) error
+
+	// List retrieves list of objects for a given namespace and list options. On a
+	// successful call, Items field in the list will be populated with the
+	// result returned from the server.
+	List(obj rtclient.Object, opts ...rtclient.ListOption) error
 }
 
 // KubernetesResource Kubernetes object operate
