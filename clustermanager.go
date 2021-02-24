@@ -104,7 +104,7 @@ type ResourceOperate interface {
 	// List retrieves list of objects for a given namespace and list options. On a
 	// successful call, Items field in the list will be populated with the
 	// result returned from the server.
-	List(obj rtclient.Object, opts ...rtclient.ListOption) error
+	List(obj rtclient.ObjectList, opts ...rtclient.ListOption) error
 }
 
 // KubernetesResource Kubernetes object operate
