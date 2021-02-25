@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 
+	"k8s.io/apimachinery/pkg/runtime"
 	ktypes "k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
@@ -25,6 +26,8 @@ type BeforeStartHandle func(cli MingleClient) error
 // wrap controller-runtime manager
 type MingleClient interface {
 	ResourceOperate
+
+	EventRecorder
 
 	// if dissatisfy can use this interface get Kubernetes resource
 	KubernetesResource
@@ -105,6 +108,28 @@ type ResourceOperate interface {
 	// successful call, Items field in the list will be populated with the
 	// result returned from the server.
 	List(obj rtclient.ObjectList, opts ...rtclient.ListOption) error
+}
+
+// EventRecorder knows how to record events on behalf of an EventSource.
+type EventRecorder interface {
+	// Event constructs an event from the given information and puts it in the queue for sending.
+	// 'object' is the object this event is about. Event will make a reference-- or you may also
+	// pass a reference to the object directly.
+	// 'type' of this event, and can be one of Normal, Warning. New types could be added in future
+	// 'reason' is the reason this event is generated. 'reason' should be short and unique; it
+	// should be in UpperCamelCase format (starting with a capital letter). "reason" will be used
+	// to automate handling of events, so imagine people writing switch statements to handle them.
+	// You want to make that easy.
+	// 'message' is intended to be human readable.
+	//
+	// The resulting event will be created in the same namespace as the reference object.
+	Event(object runtime.Object, eventtype, reason, message string)
+
+	// Eventf is just like Event, but with Sprintf for the message field.
+	Eventf(object runtime.Object, eventtype, reason, messageFmt string, args ...interface{})
+
+	// AnnotatedEventf is just like eventf, but with annotations attached
+	AnnotatedEventf(object runtime.Object, annotations map[string]string, eventtype, reason, messageFmt string, args ...interface{})
 }
 
 // KubernetesResource Kubernetes object operate
