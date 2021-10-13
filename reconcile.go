@@ -25,3 +25,21 @@ type Reconciler interface {
 	// 3. if requeue is true, readd ratelimit queue
 	Reconcile(req types.NamespacedName) (requeue NeedRequeue, after time.Duration, err error)
 }
+
+// WrapNamespacedName wrap standard namespacedname with queue name
+type WrapNamespacedName struct {
+	types.NamespacedName
+
+	// queue name
+	QName string
+}
+
+// WrapReconciler interface, define Reconcile handle
+type WrapReconciler interface {
+	// Reconcile request name and namespace
+	// returns requeue, after, error
+	// 1. if error is not empty, will readd ratelimit queue
+	// 2. if after > 0, will add queue after `after` time
+	// 3. if requeue is true, readd ratelimit queue
+	Reconcile(req WrapNamespacedName) (requeue NeedRequeue, after time.Duration, err error)
+}

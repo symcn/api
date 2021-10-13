@@ -20,7 +20,8 @@ type SetKubeRestConfig func(config *rest.Config)
 // BeforeStartHandle before Start exec this handle
 // registry informer, when multi cluster manager add new cluster
 // should record before handle, returns error will not start
-type BeforeStartHandle func(cli MingleClient) error
+// ctx => use single context can bound handle life cycle with client
+type BeforeStartHandle func(ctx context.Context, cli MingleClient) error
 
 // MingleClient mingle client
 // wrap controller-runtime manager
