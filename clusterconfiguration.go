@@ -6,8 +6,9 @@ type KubeConfigType string
 // KubeConfigTypeFile file
 // KubeConfigTypeRawString rawstring
 const (
-	KubeConfigTypeFile      KubeConfigType = "file"
-	KubeConfigTypeRawString KubeConfigType = "rawstring"
+	KubeConfigTypeFile      KubeConfigType = "File"
+	KubeConfigTypeRawString KubeConfigType = "RawString"
+	KubeConfigTypeInCluster KubeConfigType = "InCluster"
 )
 
 // ClusterConfigurationManager clusterconfiguration manager
