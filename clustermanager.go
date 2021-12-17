@@ -5,6 +5,7 @@ import (
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ktypes "k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/cache"
@@ -141,6 +142,10 @@ type KubernetesResource interface {
 	// GetKubeInterface return Kubernetes Interface.
 	// kubernetes.ClientSet impl kubernetes.Interface
 	GetKubeInterface() kubernetes.Interface
+
+	// GetDynamicInterface return dynamic Interface.
+	// dynamic.ClientSet impl dynamic.Interface
+	GetDynamicInterface() dynamic.Interface
 }
 
 // ControllerRuntimeManagerResource controller-runtime manager resource
@@ -217,4 +222,16 @@ type MultiClientOperate interface {
 
 	// RegistryBeforAfterHandler registry BeforeStartHandle
 	RegistryBeforAfterHandler(handler BeforeStartHandle)
+}
+
+type MingleProxyClient interface {
+	KubernetesResource
+
+	// GetRuntimeClient() return controller runtime client
+	GetRuntimeClient() rtclient.Client
+}
+
+// MultiProxyClient multi proxy client
+type MultiProxyClient interface {
+	GetAll() []MingleProxyClient
 }
