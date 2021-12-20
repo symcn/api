@@ -229,6 +229,9 @@ type MingleProxyClient interface {
 
 	// GetRuntimeClient() return controller runtime client
 	GetRuntimeClient() rtclient.Client
+
+	// GetClusterCfgInfo returns cluster configuration info
+	GetClusterCfgInfo() ClusterCfgInfo
 }
 
 // MultiProxyClient multi proxy client
