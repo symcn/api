@@ -25,3 +25,25 @@ type Metrics interface {
 	// UnregisterAll unregister all metrics.  (Mostly for testing.)
 	UnregisterAll()
 }
+
+// MetricsWithLabels is a wrapper interface for prometheus.Metrics.
+// Usually create only one metcis object, because the name will registry once.
+type MetricsWithLabels interface {
+	// Counter creates or returns a prometheus counter by labels
+	Counter(labels map[string]string) (prometheus.Counter, error)
+
+	// Gauge creates or returns a prometheus gauge by labels
+	Gauge(labels map[string]string) (prometheus.Gauge, error)
+
+	// Histogram creates or returns a prometheus histogram by labels
+	Histogram(labels map[string]string, buckets []float64) (prometheus.Histogram, error)
+
+	// Summary creates or returns a summary histogram by labels, objectives default 50%, 90% 95% and 99%
+	Summary(labels map[string]string, objectives map[float64]float64) (prometheus.Summary, error)
+
+	// Delete prometheus.Metrics With Labels
+	Delete(labels map[string]string) bool
+
+	// Free nnregister from Prometheus
+	Free()
+}
