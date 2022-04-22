@@ -1,6 +1,8 @@
 package api
 
-import rtclient "sigs.k8s.io/controller-runtime/pkg/client"
+import (
+	rtclient "sigs.k8s.io/controller-runtime/pkg/client"
+)
 
 // ObjectTransformFunc EventHandler transform object
 type ObjectTransformFunc func(obj rtclient.Object) string
