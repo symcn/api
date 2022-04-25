@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"time"
 
 	"k8s.io/apimachinery/pkg/types"
@@ -32,7 +33,7 @@ type Reconciler interface {
 	// 1. if error is not empty, will readd ratelimit queue
 	// 2. if after > 0, will add queue after `after` time
 	// 3. if requeue is true, readd ratelimit queue
-	Reconcile(req types.NamespacedName) (requeue NeedRequeue, after time.Duration, err error)
+	Reconcile(ctx context.Context, req types.NamespacedName) (requeue NeedRequeue, after time.Duration, err error)
 }
 
 // WrapNamespacedName wrap standard namespacedname with queue name
@@ -50,7 +51,7 @@ type WrapReconciler interface {
 	// 1. if error is not empty, will readd ratelimit queue
 	// 2. if after > 0, will add queue after `after` time
 	// 3. if requeue is true, readd ratelimit queue
-	Reconcile(req WrapNamespacedName) (requeue NeedRequeue, after time.Duration, err error)
+	Reconcile(ctx context.Context, req WrapNamespacedName) (requeue NeedRequeue, after time.Duration, err error)
 }
 
 type EventRequest struct {
@@ -68,7 +69,7 @@ type EventRequest struct {
 // 3. if requeue is true, readd ratelimit queue
 type EventReonciler interface {
 	// OnAdd is called when an object is added.
-	OnAdd(qname string, obj interface{}) (requeue NeedRequeue, after time.Duration, err error)
+	OnAdd(ctx context.Context, qname string, obj interface{}) (requeue NeedRequeue, after time.Duration, err error)
 
 	// OnUpdate is called when an object is modified. Note that oldObj is the
 	// last known state of the object-- it is possible that several changes
@@ -76,11 +77,11 @@ type EventReonciler interface {
 	// change. OnUpdate is also called when a re-list happens, and it will
 	// get called even if nothing changed. This is useful for periodically
 	// evaluating or syncing something.
-	OnUpdate(qname string, oldObj, newObj interface{}) (requeue NeedRequeue, after time.Duration, err error)
+	OnUpdate(ctx context.Context, qname string, oldObj, newObj interface{}) (requeue NeedRequeue, after time.Duration, err error)
 
 	// OnDelete will get the final state of the item if it is known, otherwise
 	// it will get an object of type DeletedFinalStateUnknown. This can
 	// happen if the watch is closed and misses the delete event and we don't
 	// notice the deletion until the subsequent re-list.
-	OnDelete(qname string, obj interface{}) (requeue NeedRequeue, after time.Duration, err error)
+	OnDelete(ctx context.Context, qname string, obj interface{}) (requeue NeedRequeue, after time.Duration, err error)
 }
