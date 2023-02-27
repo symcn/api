@@ -14,6 +14,20 @@ import (
 	rtmanager "sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
+// EventType cluster client event type.
+type EventType int
+
+const (
+	AddCluster EventType = iota
+	DeleteCluster
+)
+
+// Watcher subscribe channel.
+type Watcher struct {
+	Client MingleClient
+	Type   EventType
+}
+
 // SetKubeRestConfig set rest config
 // such as QPS Burst
 type SetKubeRestConfig func(config *rest.Config)
@@ -182,8 +196,11 @@ type MultiMingleClient interface {
 
 	Controller
 
-	// Rebuild get clusterconfigurationmanager GetAll and rebuild clusterClientMap
-	Rebuild() error
+	// FetchClientOnce use GetAll function get clusterconfigurationmanager list and rebuild clusterClientMap
+	FetchClientInfoOnce() error
+
+	// SubscriptionClientEvent subscription client add/delete event
+	SubscriptionClientEvent(chan Watcher)
 
 	// HasSynced return true if all mingleclient and all informers underlying store has synced
 	// !import if informerlist is empty, will return true
