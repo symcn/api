@@ -111,7 +111,7 @@ type ResourceOperate interface {
 	// Update updates the fields corresponding to the status subresource for the
 	// given obj with timeout. obj must be a struct pointer so that obj can be updated
 	// with the content returned by the Server.
-	StatusUpdate(obj rtclient.Object, opts ...rtclient.UpdateOption) error
+	StatusUpdate(obj rtclient.Object, opts ...rtclient.SubResourceUpdateOption) error
 
 	// Patch patches the given obj in the Kubernetes cluster with timeout. obj must be a
 	// struct pointer so that obj can be updated with the content returned by the Server.
