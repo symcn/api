@@ -14,18 +14,11 @@ import (
 	rtmanager "sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
-// EventType cluster client event type.
-type EventType int
+// ClusterEventHandler cluster event handler
+type ClusterEventHandler interface {
+	OnAdd(ctx context.Context, cli MingleClient)
 
-const (
-	AddCluster EventType = iota
-	DeleteCluster
-)
-
-// Watcher subscribe channel.
-type Watcher struct {
-	Client MingleClient
-	Type   EventType
+	OnDelete(ctx context.Context, cli MingleClient)
 }
 
 // SetKubeRestConfig set rest config
@@ -199,8 +192,8 @@ type MultiMingleClient interface {
 	// FetchClientOnce use GetAll function get clusterconfigurationmanager list and rebuild clusterClientMap
 	FetchClientInfoOnce() error
 
-	// SubscriptionClientEvent subscription client add/delete event
-	SubscriptionClientEvent(chan Watcher)
+	// AddClusterEventHandler subscription client add/delete event
+	AddClusterEventHandler(handler ClusterEventHandler)
 
 	// HasSynced return true if all mingleclient and all informers underlying store has synced
 	// !import if informerlist is empty, will return true
