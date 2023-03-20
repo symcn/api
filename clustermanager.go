@@ -230,8 +230,8 @@ type MultiClientOperate interface {
 	// GetAllConnected returns all MingleClient which status is connected
 	GetAllConnected() []MingleClient
 
-	// RegistryBeforAfterHandler registry BeforeStartHandle
-	RegistryBeforAfterHandler(handler BeforeStartHandle)
+	// RegistryBeforeStartHandler registry BeforeStartHandle
+	RegistryBeforeStartHandler(handler BeforeStartHandle)
 }
 
 type MingleProxyClient interface {
